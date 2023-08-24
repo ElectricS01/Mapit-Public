@@ -1,0 +1,60 @@
+{
+  "events": [
+    {
+      "id": 0,
+      "title": "Event one",
+      "description": "Description one",
+      "roomIDs": [0],
+      "start": "2023-08-18T09:41:54Z",
+      "end": "2023-08-20T09:42:49Z"
+    },
+    {
+      "id": 1,
+      "title": "Event two",
+      "description": "Description two",
+      "roomIDs": [1],
+      "start": "2023-08-23T01:00:00Z",
+      "end": "2023-08-23T13:59:59Z"
+    },
+    {
+      "id": 2,
+      "title": "Event three",
+      "description": "Description three",
+      "roomIDs": [0,2,3,4],
+      "start": "2024-08-16T13:00:00Z",
+      "end": "2024-08-17T13:00:00Z"
+    }
+  ],
+  "rooms": [
+    {
+      "id": 0,
+      "name": "Room 1",
+      "description":
+      "This is the first room"
+    },
+    {
+      "id": 1,
+      "name": "Room 2",
+      "description":
+      "This is the second room"
+    },
+    {
+      "id": 2,
+      "name": "Room 3",
+      "description":
+      "This is the third room"
+    },
+    {
+      "id": 3,
+      "name": "Room 4",
+      "description":
+      "This is the forth room"
+    },
+    {
+      "id": 4,
+      "name": "Room 5",
+      "description":
+      "This is the fifth room"
+    }
+  ]
+}

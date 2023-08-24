@@ -1,0 +1,512 @@
+body {
+  height: 100%;
+  margin: 48px 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  /*background-image: linear-gradient(rgb(255, 204, 0),rgb(255, 102, 0));*//*debug*/
+  background-color: #181a1b;
+  transition: background-color 1s ease, color 1s ease;
+}
+
+.event-box::-webkit-scrollbar,
+.search-box::-webkit-scrollbar,
+.container-flex::-webkit-scrollbar {
+  width: 6px;
+}
+
+.event-box::-webkit-scrollbar-thumb,
+.search-box::-webkit-scrollbar-thumb,
+.container-flex::-webkit-scrollbar-thumb {
+  background-color: rgba(40, 42, 43, 0.75);
+  border-radius: 3px;
+  transition: background-color 1s ease, fill 1s ease;
+}
+
+.container-flex::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(49, 52, 53, 0.75);
+}
+
+.container {
+  position: fixed;
+  top: 48px;
+  justify-content: center;
+  align-items: baseline;
+  width: 100%;
+  height: calc(100% - 48px);
+  overflow-y: auto;
+  text-align: center;
+}
+
+.container-flex {
+  display: flex;
+  position: fixed;
+  top: 48px;
+  justify-content: center;
+  align-items: baseline;
+  width: 100%;
+  height: calc(100% - 48px);
+  overflow-y: auto;
+  text-align: center;
+}
+
+.map-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.background-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.background {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url('background.webp');
+  background-size: cover;
+  filter: brightness(1) blur(10px) saturate(1);
+  animation: moveImage 100s infinite alternate;
+  transition: filter 0.3s ease;
+}
+
+.light-mode .background {
+  filter: brightness(2) blur(10px) saturate(0.75);
+}
+
+@keyframes moveImage {
+  0%, 100% {
+    transform: scale(1.4) translate(5%, 5%);
+  }
+  25% {
+    transform: scale(1.35) translate(8%, -2%);
+  }
+  50% {
+    transform: scale(1.4) translate(0, 0);
+  }
+  75% {
+    transform: scale(1.35) translate(-2%, 8%);
+  }
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: rgba(40, 42, 43, 0.75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.navbar a {
+  height: 20px;
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 17px;
+  transition: background-color 1s ease;
+}
+
+.navbar a.active {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+.close {
+  position: absolute;
+  right: 8px;
+  transition: background-color 1s ease, fill 1s ease;
+}
+
+.mode-switch {
+  padding: 12px;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: background-color 1s ease, fill 1s ease;
+}
+
+.search-item {
+  transition: background-color 1s ease;
+}
+
+.event-box::-webkit-scrollbar-thumb:hover,
+.search-box::-webkit-scrollbar-thumb:hover,
+.highlighted,
+.mode-switch:hover,
+.search-item:hover,
+.close:hover,
+.navbar a:hover,
+.icon-mobile:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.25s ease, fill 1s ease;
+}
+
+.light-mode .sub-map-item:hover,
+.light-mode .map-item:hover,
+.light-mode .event-box::-webkit-scrollbar-thumb:hover,
+.light-mode .search-box::-webkit-scrollbar-thumb:hover,
+.light-mode .highlighted,
+.light-mode .container-flex::-webkit-scrollbar-thumb:hover,
+.light-mode .mode-switch:hover,
+.light-mode .search-item:hover,
+.light-mode .close:hover,
+.light-mode .navbar a:hover,
+.light-mode .icon-mobile:hover {
+  background-color: rgba(191, 191, 191, 0.6);
+  transition: background-color 0.25s ease, fill 1s ease;
+}
+
+.icon-mobile {
+  display: none;
+  transition: background-color 1s ease, color 1s ease;
+}
+
+@media screen and (max-width: 360px) {
+
+  .navbar a:not(:first-child) {
+    display: none;
+  }
+
+  .icon-mobile {
+    line-height: 24px;
+    width: 28px;
+    height: 28px;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: block;
+    text-align: center;
+    font-size: 17px;
+    cursor: pointer;
+  }
+
+  .navbar.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+
+  .mode-switch {
+    right: 48px;
+  }
+}
+
+.menu {
+  width: fit-content;
+  background-color: rgba(40, 42, 43, 0.75);
+  margin: 16px;
+  z-index: 2;
+  padding: 16px;
+  border-radius: 8px;
+  opacity: 0;
+  animation: slideIn-menu 1s forwards, fadeIn 1s forwards;
+  align-content:center ;
+}
+
+.side-bar {
+  width: clamp(334px, calc(30% - 16px), 484px);
+  padding: 8px;
+  height: calc(100% - 16px);
+  background-color: rgba(40, 42, 43, 0.75);
+  animation: fadeIn 1s forwards;
+}
+
+.map-page {
+  width: calc(100% - clamp(350px, 30%, 500px));
+  height: 100%;
+  overflow-y: auto;
+}
+
+.map {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  margin: 8px auto auto auto;
+  height: 734px;
+  width: 528px;
+  transition: border 1s ease;
+}
+
+.light-mode .map {
+  border: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+.map-item {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: background-color 1s ease, color 1s ease;
+  cursor: pointer;
+  position: absolute;
+}
+
+.sub-map-item {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: background-color 1s ease, color 1s ease;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.sub-map-item:hover,
+.map-item:hover {
+  background-color: rgba(20, 20, 20, 0.9);
+}
+
+.map-background {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 1s ease;
+}
+
+.light-mode .map-background {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.selected {
+  outline: 5px solid yellow;
+  z-index: 3;
+}
+
+.lc-block {
+  position: absolute;
+  cursor: pointer;
+  width: 72px;
+  height: 72px;
+  line-height: 8px;
+  display: flex;
+}
+
+.block {
+  position: absolute;
+  line-height: 8px;
+}
+
+.block-title {
+  cursor: pointer;
+  width: 100%;
+  position: absolute;
+  bottom: 76px;
+  line-height: 12px
+}
+
+.block-title-other {
+  cursor: pointer;
+  width: 100%;
+  position: absolute;
+  line-height: 12px
+}
+
+.event-box {
+  overflow-y: auto;
+  height: calc(100% - 96px);
+  text-align: left;
+  padding: 8px;
+}
+
+.search-box {
+  overflow-y: auto;
+  height: calc(100% - 64px);
+  text-align: left;
+  padding: 8px;
+}
+
+.button {
+  cursor: pointer;
+  margin: 0 4px;
+  color: white;
+  background-color: rgba(40, 42, 43, 0.75);
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 1s ease, color 1s ease;
+}
+
+.menu-button {
+  margin: 0 4px;
+  color: white;
+  background-color: rgba(40, 42, 43, 0.75);
+  padding: 8px;
+  border-radius: 6px;
+  animation: fadeIn 1s forwards;
+  transition: background-color 1s ease, color 1s ease;
+}
+
+.menu-button:hover,
+.button:hover {
+  background-color: rgba(52, 55, 56, 0.75);
+}
+
+.menu-button:active,
+.button:active {
+  background-color: rgba(65, 68, 69, 0.75);
+}
+
+input {
+  color: white;
+  font-size: 16px;
+  width: calc(100% - 16px);
+  padding: 4px;
+  margin: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #3d3d3d;
+}
+
+input:focus {
+  outline: 1px solid white;
+}
+
+.spacer {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+  margin: 10px 0;
+}
+
+a {
+  text-decoration: none;
+  color: #00A8FC;
+}
+
+.medium {
+  font-size: 20px;
+  margin: 4px;
+}
+
+.small {
+  margin: 8px 0;
+}
+
+.title {
+  font-size: 36px;
+  margin-top: 12px;
+  animation: slideIn 1s forwards, fadeIn 1s forwards;
+}
+
+.title-small {
+  animation: fadeIn 1s forwards;
+}
+
+.title-sub {
+  font-size: 24px;
+}
+
+.title-menu {
+  font-size: 36px;
+}
+
+@keyframes slideIn {
+  0% {
+    margin-top: 12px;
+  }
+  100% {
+    margin-top: 48px;
+  }
+}
+
+@keyframes slideIn-menu {
+  0% {
+    margin-top: 0;
+  }
+  100% {
+    margin-top: 16px;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.school-events {
+text-decoration: mediumorchid;
+}
+
+.events {
+  text-align: left;
+}
+
+.event {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rooms {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+input,
+.search-item,
+p,
+a,
+input,
+.search-item,
+p,
+a,
+input,
+.side-bar,
+.menu,
+.navbar {
+  transition: background-color 1s ease, color 1s ease, filter 0.3s ease;
+}
+
+.light-mode .close,
+.light-mode svg {
+  fill: black;
+}
+
+.light-mode .map-item,
+.light-mode .sub-map-item,
+.light-mode .button,
+.light-mode input,
+.light-mode .search-item,
+.light-mode .icon-mobile,
+.light-mode p,
+.light-mode a {
+  color: black;
+  transition: background-color 1s ease, color 1s ease;
+}
+
+.light-mode .map-item,
+.light-mode .sub-map-item,
+.light-mode .event-box::-webkit-scrollbar-thumb,
+.light-mode .search-box::-webkit-scrollbar-thumb,
+.light-mode .container-flex::-webkit-scrollbar-thumb,
+.light-mode input,
+.light-mode .side-bar,
+.light-mode .menu,
+.light-mode .menu-button,
+.light-mode .button,
+.light-mode .navbar {
+  background-color: rgba(255, 255, 255, 0.6);
+  transition: background-color 1s ease, color 1s ease;
+}
+
+.light-mode .menu-button:hover,
+.light-mode .button:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.light-mode .menu-button:active,
+.light-mode .button:active {
+  background-color: rgba(255, 255, 255, 0.9);
+}
