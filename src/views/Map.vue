@@ -246,7 +246,7 @@ export default {
       })
     },
     activateItem() {
-      if (this.highlightedIndex !== -1) {
+      if (this.highlightedIndex !== -1 && this.searchedRooms.length) {
         this.show(this.searchedRooms[this.highlightedIndex].name)
         this.search = ""
       }
