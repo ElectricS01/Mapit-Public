@@ -8,4 +8,3 @@
     <router-link to="map" class="menu-button">Go to the Map</router-link>
   </div>
 </template>
-<script></script>

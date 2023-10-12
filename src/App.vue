@@ -1,25 +1,25 @@
 <template>
   <header :class="isDarkMode === 'true' ? 'dark-mode' : 'light-mode'">
     <div class="navbar" id="mobile-navbar">
-      <router-link to="/" @click="responsive_navbar()">Home</router-link>
+      <router-link to="/" @click="responsiveNavbar()">Home</router-link>
       <router-link
         to="/map"
         :class="{ active: active('/map') }"
-        @click="responsive_navbar()"
+        @click="responsiveNavbar()"
       >
         Map
       </router-link>
       <router-link
         to="/events"
         :class="{ active: active('/events') }"
-        @click="responsive_navbar()"
+        @click="responsiveNavbar()"
       >
         Events
       </router-link>
       <router-link
         to="/about"
         :class="{ active: active('/about') }"
-        @click="responsive_navbar()"
+        @click="responsiveNavbar()"
       >
         About
       </router-link>
@@ -28,7 +28,7 @@
         class="mode-switch"
         @click="toggleMode()"
       ></icons>
-      <div class="icon-mobile" @click="responsive_navbar()">☰</div>
+      <div class="icon-mobile" @click="responsiveNavbar()">☰</div>
     </div>
   </header>
   <main :class="isDarkMode === 'true' ? 'dark-mode' : 'light-mode'">
@@ -39,50 +39,46 @@
   </main>
 </template>
 
-<script>
+<script setup>
 import Icons from "@/components/Icons.vue"
+import { useRoute } from "vue-router"
+import { ref } from "vue"
 
-export default {
-  name: "App",
-  components: { Icons },
-  data() {
-    return {
-      isDarkMode: "true"
-    }
-  },
-  methods: {
-    active(route) {
-      return route === this.$route.path
-    },
-    responsive_navbar() {
-      const responsive_navbar = document.getElementById("mobile-navbar")
-      if (responsive_navbar.className === "navbar") {
-        responsive_navbar.className += " responsive"
-      } else {
-        responsive_navbar.className = "navbar"
-      }
-    },
-    toggleMode() {
-      if (localStorage.getItem("isDarkMode") !== "true") {
-        localStorage.setItem("isDarkMode", "true")
-        document.body.style.backgroundColor = "#181a1b"
-      } else {
-        localStorage.setItem("isDarkMode", "false")
-        document.body.style.backgroundColor = "white"
-      }
-      this.isDarkMode = localStorage.getItem("isDarkMode")
-    }
-  },
-  created() {
-    if (localStorage.getItem("isDarkMode")) {
-      this.isDarkMode = localStorage.getItem("isDarkMode")
-    } else {
-      localStorage.setItem("isDarkMode", "true")
-      this.isDarkMode = "true"
-    }
-    if (localStorage.getItem("isDarkMode") !== "true") {
-      document.body.style.backgroundColor = "white"
-    }
+const route = useRoute()
+
+const isDarkMode = ref("true")
+
+if (localStorage.getItem("isDarkMode")) {
+  isDarkMode.value = localStorage.getItem("isDarkMode")
+} else {
+  localStorage.setItem("isDarkMode", "true")
+  isDarkMode.value = "true"
+}
+if (localStorage.getItem("isDarkMode") !== "true") {
+  document.body.style.backgroundColor = "white"
+}
+
+const active = (routePattern) => {
+  return route.path.startsWith(routePattern)
+}
+const responsiveNavbar = () => {
+  const responsiveNavbar = document.getElementById("mobile-navbar")
+  if (responsiveNavbar.className === "navbar") {
+    responsiveNavbar.className += " responsive"
+  } else {
+    responsiveNavbar.className = "navbar"
   }
+}
+let toggleMode = () => {
+  if (localStorage.getItem("isDarkMode") !== "true") {
+    localStorage.setItem("isDarkMode", "true")
+    document.body.style.backgroundColor = "#181a1b"
+    console.log(isDarkMode === "true" ? "sun" : "moon")
+  } else {
+    localStorage.setItem("isDarkMode", "false")
+    document.body.style.backgroundColor = "white"
+    console.log(isDarkMode === "true" ? "sun" : "moon")
+  }
+  isDarkMode.value = localStorage.getItem("isDarkMode")
 }
 </script>

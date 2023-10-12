@@ -19,7 +19,7 @@
           <div
             @click="show('Room 1')"
             class="map-item"
-            :class="{ selected: isHighlighted(0) }"
+            :class="{ selected: isHighlighted === 0 }"
             style="
               width: 110px;
               height: 130px;
@@ -28,29 +28,25 @@
               left: 20px;
             "
           >
-            {{ rooms[0].name }}
+            {{ data.rooms[0].name }}
           </div>
           <div
             class="block"
-            style="
-              top: 300px;
-              left: 190px;
-              transform: rotate(30deg);
-            "
+            style="top: 300px; left: 190px; transform: rotate(30deg)"
           >
             <div style="display: flex">
               <div
                 @click="show('Room 2')"
                 class="sub-map-item"
-                :class="{ selected: isHighlighted(1) }"
+                :class="{ selected: isHighlighted === 1 }"
                 style="width: 100px; height: 100px; line-height: 30px"
               >
-                {{ rooms[1].name }}
+                {{ data.rooms[1].name }}
               </div>
               <div
                 @click="show('Room 3')"
                 class="sub-map-item"
-                :class="{ selected: isHighlighted(2) }"
+                :class="{ selected: isHighlighted === 2 }"
                 style="
                   width: 60px;
                   height: 60px;
@@ -58,14 +54,14 @@
                   margin-left: 4px;
                 "
               >
-                {{ rooms[2].name }}
+                {{ data.rooms[2].name }}
               </div>
             </div>
             <div style="display: flex; margin-top: 4px">
               <div
                 @click="show('Room 4')"
                 class="map-background"
-                :class="{ selected: isHighlighted(3) }"
+                :class="{ selected: isHighlighted === 3 }"
                 style="width: 36px; height: 32px; margin-left: 54px"
               ></div>
             </div>
@@ -73,7 +69,7 @@
               <div
                 @click="show('Room 5')"
                 class="map-background"
-                :class="{ selected: isHighlighted(4) }"
+                :class="{ selected: isHighlighted === 4 }"
                 style="width: 36px; height: 32px; margin-left: 54px"
               ></div>
             </div>
@@ -102,7 +98,7 @@
             {{ room.name }}
           </div>
         </div>
-        <div v-else-if="isRoomVisible()">
+        <div v-else-if="isRoomVisible">
           <div style="display: flex">
             <p style="width: 100%" class="medium">Class details for</p>
             <icons
@@ -116,12 +112,12 @@
         </div>
         <div v-else style="height: calc(100% - 80px)">
           <p class="title-menu">Interactive Map</p>
-          <div v-if="events.length" style="height: calc(100% - 76px)">
+          <div v-if="data.events.length" style="height: calc(100% - 76px)">
             <div class="spacer"></div>
             <p class="title-sub">Upcoming events</p>
             <div class="event-box">
               <div
-                v-for="(event, index) in events"
+                v-for="(event, index) in data.events"
                 :key="event"
                 :id="'event-' + index"
               >
@@ -133,13 +129,13 @@
                     v-for="room in event.roomIDs"
                     :key="room"
                     class="button"
-                    @click="show(rooms[room].name)"
+                    @click="show(data.rooms[room].name)"
                   >
-                    {{ rooms[room].name }}
+                    {{ data.rooms[room].name }}
                   </div>
                 </div>
                 <div class="event">
-                  <p>{{ displayTime(event.start) }}</p>
+                  <p>{{ displayTime(event.start, false) }}</p>
                   <p>{{ displayTime(event.end, true) }}</p>
                 </div>
               </div>
@@ -150,180 +146,152 @@
     </div>
   </div>
 </template>
-<script>
+
+<script setup>
 import Icons from "@/components/Icons.vue"
 import data from "../assets/data.json"
+import { computed, nextTick, onUnmounted, ref, watch } from "vue"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import { useRoute } from "vue-router"
 
-export default {
-  components: { Icons },
-  data() {
-    return {
-      roomVisible: {},
-      search: "",
-      searchedRooms: {},
-      highlightedIndex: 0,
-      highlightedItem: -1
-    }
-  },
-  methods: {
-    show(roomName) {
-      this.roomVisible = this.rooms.find((room) => room.name === roomName)
-      this.highlightedItem = this.roomVisible.id
-      this.search = ""
-    },
-    isRoomVisible() {
-      return Object.keys(this.roomVisible).length !== 0
-    },
-    searchRooms() {
-      const lastSearchedRooms = this.searchedRooms
-      this.searchedRooms = this.rooms.filter((room) => {
-        if (this.search.length > 1) {
-          return (
-            room.name.toLowerCase().includes(this.search.toLowerCase()) ||
-            room.description.toLowerCase().includes(this.search.toLowerCase())
-          )
-        } else {
-          return room.name.toLowerCase().includes(this.search.toLowerCase())
-        }
-      })
-      this.searchedRooms.sort((a, b) => {
-        const aStartsWithSearch = a.name
-          .toLowerCase()
-          .startsWith(this.search.toLowerCase())
-        const bStartsWithSearch = b.name
-          .toLowerCase()
-          .startsWith(this.search.toLowerCase())
-        if (aStartsWithSearch && !bStartsWithSearch) {
-          return -1
-        } else if (!aStartsWithSearch && bStartsWithSearch) {
-          return 1
-        }
-        return 0
-      })
-      if (
-        JSON.stringify(lastSearchedRooms) !== JSON.stringify(this.searchedRooms)
-      ) {
-        this.highlightedIndex = 0
-      }
-      if (this.searchedRooms.length && this.search) {
-        this.highlightedItem = this.searchedRooms[this.highlightedIndex].id
-      } else if (!this.searchedRooms.length) {
-        this.highlightedItem = -1
-      }
-    },
-    moveHighlight(step) {
-      if (Object.keys(this.searchedRooms).length === 0 || !this.search) return
+const route = useRoute()
+dayjs.extend(relativeTime)
 
-      if (this.highlightedIndex === -1 && step === -1) {
-        this.highlightedIndex = this.searchedRooms.length - 1
-      } else if (
-        this.highlightedIndex === this.searchedRooms.length - 1 &&
-        step === 1
-      ) {
-        this.highlightedIndex = 0
-      } else {
-        this.highlightedIndex =
-          (this.highlightedIndex + step + this.searchedRooms.length) %
-          this.searchedRooms.length
-      }
-      if (this.searchedRooms.length) {
-        this.highlightedItem = this.searchedRooms[this.highlightedIndex].id
-      } else {
-        this.highlightedItem = -1
-      }
-      this.$nextTick(() => {
-        const highlightedElement =
-          this.$refs.searchBox.querySelector(".highlighted")
-        if (highlightedElement) {
-          highlightedElement.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "nearest"
-          })
-        }
-      })
-    },
-    activateItem() {
-      if (this.highlightedIndex !== -1 && this.searchedRooms.length) {
-        this.show(this.searchedRooms[this.highlightedIndex].name)
-        this.search = ""
-      }
-    },
-    isHighlighted(id) {
+const roomVisible = ref({})
+const search = ref("")
+let searchedRooms = {}
+const highlightedIndex = ref(0)
+const highlightedItem = ref(-1)
+
+const show = (roomName) => {
+  roomVisible.value = data.rooms.find((room) => room.name === roomName)
+  highlightedItem.value = roomVisible.value.id
+  search.value = ""
+}
+const searchRooms = () => {
+  const lastSearchedRooms = searchedRooms
+  searchedRooms = data.rooms.filter((room) => {
+    if (search.value.length > 1) {
       return (
-        !!(this.search && this.highlightedItem === id) ||
-        (this.isRoomVisible() && this.highlightedItem === id)
+        room.name.toLowerCase().includes(search.value.toLowerCase()) ||
+        room.description.toLowerCase().includes(search.value.toLowerCase())
       )
-    },
-    escPressed(event) {
-      if (event.key === "Escape") {
-        if (this.search) {
-          this.search = ""
-        } else if (this.roomVisible) {
-          this.roomVisible = {}
-        } else if (this.editing) {
-          this.editing = false
-        } else if (this.replyTo) {
-          this.replyTo = null
-        } else if (!this.profileShown) {
-          this.scroll(true)
-        }
+    } else {
+      return room.name.toLowerCase().includes(search.value.toLowerCase())
+    }
+  })
+  searchedRooms.sort((a, b) => {
+    const aStartsWithSearch = a.name
+      .toLowerCase()
+      .startsWith(search.value.toLowerCase())
+    const bStartsWithSearch = b.name
+      .toLowerCase()
+      .startsWith(search.value.toLowerCase())
+    if (aStartsWithSearch && !bStartsWithSearch) {
+      return -1
+    } else if (!aStartsWithSearch && bStartsWithSearch) {
+      return 1
+    }
+    return 0
+  })
+  if (JSON.stringify(lastSearchedRooms) !== JSON.stringify(searchedRooms)) {
+    highlightedIndex.value = 0
+  }
+  if (searchedRooms.length && search.value) {
+    highlightedItem.value = searchedRooms[highlightedIndex.value].id
+  } else if (!searchedRooms.length) {
+    highlightedItem.value = -1
+  }
+}
+const moveHighlight = (step) => {
+  if (Object.keys(searchedRooms).length === 0 || !search.value) return
+
+  if (highlightedIndex.value === -1 && step === -1) {
+    highlightedIndex.value = searchedRooms.length - 1
+  } else if (
+    highlightedIndex.value === searchedRooms.length - 1 &&
+    step === 1
+  ) {
+    highlightedIndex.value = 0
+  } else {
+    highlightedIndex.value =
+      (highlightedIndex.value + step + searchedRooms.length) %
+      searchedRooms.length
+  }
+  if (searchedRooms.length) {
+    highlightedItem.value = searchedRooms[highlightedIndex.value].id
+  } else {
+    highlightedItem.value = -1
+  }
+  nextTick(() => {
+    const highlightedElement = document.getElementById("highlighted")
+    if (highlightedElement) {
+      highlightedElement.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest"
+      })
+    }
+  })
+}
+const activateItem = () => {
+  if (highlightedIndex.value !== -1 && searchedRooms.length) {
+    show(searchedRooms[highlightedIndex.value].name)
+    search.value = ""
+  }
+}
+const displayTime = (date, end) => {
+  const hoursDifference = dayjs(date).diff(dayjs(), "hour")
+  if (dayjs(date) > dayjs()) {
+    if (hoursDifference > 24) {
+      if (end) {
+        return `Ends on ${dayjs(date).format("DD/MM/YYYY HH:mm:ss")}`
+      } else {
+        return `Starts on ${dayjs(date).format("DD/MM/YYYY HH:mm:ss")}`
       }
-    },
-    displayTime(date, end) {
-      dayjs.extend(relativeTime)
-      const hoursDifference = dayjs(date).diff(dayjs(), "hour")
-      if (dayjs(date) > dayjs()) {
-        if (hoursDifference > 24) {
-          if (end) {
-            return `Ends on ${dayjs(date).format("DD/MM/YYYY HH:mm:ss")}`
-          } else {
-            return `Starts on ${dayjs(date).format("DD/MM/YYYY HH:mm:ss")}`
-          }
-        } else {
-          if (end) {
-            return `Ends in ${dayjs(date).fromNow(true)}`
-          } else {
-            return `Starts in ${dayjs(date).fromNow(true)}`
-          }
-        }
-      } else if (!end && dayjs(end) > dayjs()) {
-        return "Happening now"
-      } else if (end) {
-        return "Event is over"
+    } else {
+      if (end) {
+        return `Ends in ${dayjs(date).fromNow(true)}`
+      } else {
+        return `Starts in ${dayjs(date).fromNow(true)}`
       }
-    },
-    dayjs(date) {
-      return dayjs(date).format("DD/MM/YYYY HH:mm:ss")
     }
-  },
-  computed: {
-    rooms() {
-      return data.rooms
-    },
-    events() {
-      return data.events
-    }
-  },
-  mounted() {
-    if (this.$route.query.id) {
-      this.show(this.rooms[this.$route.query.id].name)
-    }
-    document.addEventListener("keydown", this.escPressed)
-  },
-  beforeRouteLeave() {
-    document.removeEventListener("keydown", this.escPressed)
-  },
-  unmounted() {
-    document.removeEventListener("keydown", this.escPressed)
-  },
-  watch: {
-    search: {
-      handler: "searchRooms",
-      deep: true
+  } else if (!end && dayjs(end) > dayjs()) {
+    return "Happening now"
+  } else if (end) {
+    return "Event is over"
+  }
+}
+const escPressed = (event) => {
+  if (event.key === "Escape") {
+    if (search.value) {
+      search.value = ""
+    } else if (roomVisible.value) {
+      roomVisible.value = {}
     }
   }
 }
+
+const isRoomVisible = computed(() => {
+  return Object.keys(roomVisible.value).length !== 0
+})
+const isHighlighted = computed(() => {
+  if (search.value || isRoomVisible.value) {
+    return highlightedItem.value
+  }
+})
+
+watch(search, () => {
+  searchRooms()
+})
+
+if (route.query.id) {
+  show(data.rooms[route.query.id].name)
+}
+document.addEventListener("keydown", escPressed)
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", escPressed)
+})
 </script>
