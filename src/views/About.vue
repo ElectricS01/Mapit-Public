@@ -3,8 +3,8 @@
     <div class="menu">
       <p class="title-menu">About Mapit</p>
       <p class="small">
-        Mapit is an interactive school map program to make it easier for all
-        people to navigate schools
+        Mapit is an interactive school map and map builder program to make
+        navigation easier for everyone
       </p>
       <p class="small">
         Mapit is developed by
@@ -14,7 +14,7 @@
         and
         <a href="https://github.com/Thomas123414">Thomas123414</a>
       </p>
-      <p class="small">Version: 0.1.1</p>
+      <p class="small">Version: 0.2.0</p>
     </div>
   </div>
 </template>

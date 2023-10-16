@@ -2,76 +2,54 @@
   <div class="container-flex">
     <div class="map-container">
       <div class="map-page">
-        <p
-          style="
-            position: fixed;
-            top: 52px;
-            left: 4px;
-            color: red;
-            z-index: 6;
-            font-size: 24px;
-            margin: 0;
-          "
-        >
-          PROTOTYPE
-        </p>
         <div class="map">
           <div
-            @click="show('Room 1')"
+            v-for="room in standardRooms"
+            @click="show(room.name)"
             class="map-item"
-            :class="{ selected: isHighlighted === 0 }"
-            style="
-              width: 110px;
-              height: 130px;
-              line-height: 130px;
-              top: 20px;
-              left: 20px;
-            "
+            :class="{ selected: isHighlighted === room.id }"
+            :style="{
+              width: room.width + 'px',
+              height: room.height + 'px',
+              left: room.x + 'px',
+              top: room.y + 'px'
+            }"
           >
-            {{ data.rooms[0].name }}
+            {{ room.name }}
           </div>
           <div
+            v-for="block in data.blocks"
             class="block"
-            style="top: 300px; left: 190px; transform: rotate(30deg)"
+            :style="{
+              left: block.x + 'px',
+              top: block.y + 'px',
+              transform: 'rotate(' + block.r + 'deg)'
+            }"
           >
-            <div style="display: flex">
+            <div v-for="(row, index) in block.rooms" class="block-row">
               <div
-                @click="show('Room 2')"
-                class="sub-map-item"
-                :class="{ selected: isHighlighted === 1 }"
-                style="width: 100px; height: 100px; line-height: 30px"
+                v-for="room in wingRooms[block.id][index]"
+                @click="show(room.name)"
+                :class="[
+                  { selected: isHighlighted === room.id },
+                  room.class === 'store' ? 'map-background' : 'sub-map-item'
+                ]"
+                :style="{
+                  width: room.width + 'px',
+                  height: room.height + 'px',
+                  margin:
+                    room.m[0] +
+                    'px ' +
+                    room.m[1] +
+                    'px ' +
+                    room.m[2] +
+                    'px ' +
+                    room.m[3] +
+                    'px'
+                }"
               >
-                {{ data.rooms[1].name }}
+                {{ room.class === "store" ? "" : room.name }}
               </div>
-              <div
-                @click="show('Room 3')"
-                class="sub-map-item"
-                :class="{ selected: isHighlighted === 2 }"
-                style="
-                  width: 60px;
-                  height: 60px;
-                  line-height: 30px;
-                  margin-left: 4px;
-                "
-              >
-                {{ data.rooms[2].name }}
-              </div>
-            </div>
-            <div style="display: flex; margin-top: 4px">
-              <div
-                @click="show('Room 4')"
-                class="map-background"
-                :class="{ selected: isHighlighted === 3 }"
-                style="width: 36px; height: 32px; margin-left: 54px"
-              ></div>
-            </div>
-            <div style="display: flex; margin-top: 4px">
-              <div
-                @click="show('Room 5')"
-                class="map-background"
-                :class="{ selected: isHighlighted === 4 }"
-                style="width: 36px; height: 32px; margin-left: 54px"
-              ></div>
             </div>
           </div>
         </div>
@@ -99,7 +77,7 @@
           </div>
         </div>
         <div v-else-if="isRoomVisible">
-          <div style="display: flex">
+          <div class="class-details">
             <p style="width: 100%" class="medium">Class details for</p>
             <icons
               icon="close"
@@ -160,9 +138,19 @@ dayjs.extend(relativeTime)
 
 const roomVisible = ref({})
 const search = ref("")
-let searchedRooms = {}
 const highlightedIndex = ref(0)
 const highlightedItem = ref(-1)
+let searchedRooms = {}
+
+const standardRooms = data.rooms.filter((item) => item.id in data.standard)
+let wingRooms = []
+for (let i = 0; i < data.blocks.length; i++) {
+  wingRooms[i] = data.blocks[i].rooms.map((roomIDs) => {
+    return roomIDs.map((roomId) => {
+      return data.rooms.find((room) => room.id === roomId)
+    })
+  })
+}
 
 const show = (roomName) => {
   roomVisible.value = data.rooms.find((room) => room.name === roomName)

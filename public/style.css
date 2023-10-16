@@ -247,6 +247,9 @@ body {
   transition: background-color 1s ease, color 1s ease;
   cursor: pointer;
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sub-map-item {
@@ -259,6 +262,9 @@ body {
   transition: background-color 1s ease, color 1s ease;
   cursor: pointer;
   font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sub-map-item:hover,
@@ -308,6 +314,10 @@ body {
   width: 100%;
   position: absolute;
   line-height: 12px
+}
+
+.block-row {
+  display: flex;
 }
 
 .event-box {
@@ -452,6 +462,10 @@ text-decoration: mediumorchid;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.class-details {
+  display: flex;
 }
 
 input,
