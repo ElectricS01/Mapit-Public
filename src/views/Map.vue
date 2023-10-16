@@ -55,15 +55,23 @@
         </div>
       </div>
       <div class="side-bar">
-        <input
-          v-model="search"
-          type="text"
-          autocomplete="off"
-          placeholder="Search for a room"
-          @keydown.down.prevent="moveHighlight(1)"
-          @keydown.up.prevent="moveHighlight(-1)"
-          @keydown.enter="activateItem"
-        />
+        <div class="class-details">
+          <input
+            style="width: calc(100% - 40px)"
+            v-model="search"
+            type="text"
+            autocomplete="off"
+            placeholder="Search for a room"
+            @keydown.down.prevent="moveHighlight(1)"
+            @keydown.up.prevent="moveHighlight(-1)"
+            @keydown.enter="activateItem"
+          />
+          <icons
+            icon="settings"
+            class="edit"
+            @click="showEdit = !showEdit"
+          ></icons>
+        </div>
         <div v-if="search" class="search-box" ref="searchBox">
           <div
             v-for="(room, index) in searchedRooms"
@@ -87,6 +95,21 @@
           </div>
           <p class="title-menu">{{ roomVisible.name }}</p>
           <p>{{ roomVisible.description }}</p>
+        </div>
+        <div v-else-if="showEdit" class="edit-panel">
+          <div v-for="room in standardRooms">{{ room.name }}</div>
+          <div v-for="block in data.blocks">
+            {{ block.name || "Unnamed Block" }}
+            <div v-for="(row, index) in block.rooms" class="edit-panel-sub">
+              Row {{ index }}
+              <div
+                v-for="room in wingRooms[block.id][index]"
+                class="edit-panel-sub"
+              >
+                {{ room.name }}
+              </div>
+            </div>
+          </div>
         </div>
         <div v-else style="height: calc(100% - 80px)">
           <p class="title-menu">Interactive Map</p>
@@ -137,6 +160,7 @@ const route = useRoute()
 dayjs.extend(relativeTime)
 
 const roomVisible = ref({})
+const showEdit = ref(false)
 const search = ref("")
 const highlightedIndex = ref(0)
 const highlightedItem = ref(-1)

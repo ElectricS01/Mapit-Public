@@ -123,6 +123,21 @@ body {
   transition: background-color 1s ease, fill 1s ease;
 }
 
+.edit {
+  position: absolute;
+  right: 8px;
+  top: 18px;
+  transition: background-color 1s ease, fill 1s ease;
+}
+
+.edit-panel {
+  text-align: left;
+}
+
+.edit-panel-sub {
+  margin-left: 12px;
+}
+
 .mode-switch {
   padding: 12px;
   cursor: pointer;
@@ -142,6 +157,7 @@ body {
 .mode-switch:hover,
 .search-item:hover,
 .close:hover,
+.edit:hover,
 .navbar a:hover,
 .icon-mobile:hover {
   background-color: rgba(255, 255, 255, 0.1);
@@ -157,6 +173,7 @@ body {
 .light-mode .mode-switch:hover,
 .light-mode .search-item:hover,
 .light-mode .close:hover,
+.light-mode .edit:hover,
 .light-mode .navbar a:hover,
 .light-mode .icon-mobile:hover {
   background-color: rgba(191, 191, 191, 0.6);
@@ -484,6 +501,7 @@ input,
 }
 
 .light-mode .close,
+.light-mode .edit,
 .light-mode svg {
   fill: black;
 }
