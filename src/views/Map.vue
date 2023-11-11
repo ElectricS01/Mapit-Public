@@ -20,19 +20,29 @@
           <div
             v-for="block in data.blocks"
             class="block"
+            :id="'block-' + block.id"
             :style="{
               left: block.x + 'px',
               top: block.y + 'px',
               transform: 'rotate(' + block.r + 'deg)'
             }"
           >
+            <div
+              class="block-title"
+              :style="{
+                bottom: blockHeights[block.id] + 'px'
+              }"
+              @click="show(block.name)"
+            >
+              {{ block.name }}
+            </div>
             <div v-for="(row, index) in block.rooms" class="block-row">
               <div
                 v-for="room in wingRooms[block.id][index]"
                 @click="show(room.name)"
                 :class="[
                   { selected: isHighlighted === room.id },
-                  room.class === 'store' ? 'map-background' : 'sub-map-item'
+                  room.type === 'store' ? 'map-background' : 'sub-map-item'
                 ]"
                 :style="{
                   width: room.width + 'px',
@@ -48,7 +58,7 @@
                     'px'
                 }"
               >
-                {{ room.class === "store" ? "" : room.name }}
+                {{ room.type === "store" ? "" : room.name }}
               </div>
             </div>
           </div>
@@ -59,7 +69,6 @@
           <input
             style="width: calc(100% - 40px)"
             v-model="search"
-            type="text"
             autocomplete="off"
             placeholder="Search for a room"
             @keydown.down.prevent="moveHighlight(1)"
@@ -86,7 +95,7 @@
         </div>
         <div v-else-if="isRoomVisible">
           <div class="class-details">
-            <p style="width: 100%" class="medium">Class details for</p>
+            <p style="width: 100%" class="medium">Room details for</p>
             <icons
               icon="close"
               class="close"
@@ -132,7 +141,10 @@
                     class="button"
                     @click="show(data.rooms[room].name)"
                   >
-                    {{ data.rooms[room].name }}
+                    {{
+                      rooms.find((e) => e.id === room || e.roomId === room)
+                        ?.name
+                    }}
                   </div>
                 </div>
                 <div class="event">
@@ -151,7 +163,7 @@
 <script setup>
 import Icons from "@/components/Icons.vue"
 import data from "../assets/data.json"
-import { computed, nextTick, onUnmounted, ref, watch } from "vue"
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import { useRoute } from "vue-router"
@@ -165,8 +177,27 @@ const search = ref("")
 const highlightedIndex = ref(0)
 const highlightedItem = ref(-1)
 let searchedRooms = {}
+const blockHeights = ref([])
 
-const standardRooms = data.rooms.filter((item) => item.id in data.standard)
+const standardRooms = data.standard
+const rooms = data.standard
+  .concat(data.rooms)
+  .concat(data.blocks)
+  .filter((value) => Object.keys(value).length !== 0 && value.name)
+// const width =
+//   Math.max(
+//     ...rooms.map((obj) => {
+//       return obj.x + obj.width || obj.x || obj.width || null
+//     })
+//   ) + 22
+// const height =
+//   Math.max(
+//     ...rooms.map((room) => {
+//       return room.y + room.height || room.y || room.height || null
+//     })
+//   ) + 22
+// console.log(width)
+// console.log(height)
 let wingRooms = []
 for (let i = 0; i < data.blocks.length; i++) {
   wingRooms[i] = data.blocks[i].rooms.map((roomIDs) => {
@@ -177,17 +208,17 @@ for (let i = 0; i < data.blocks.length; i++) {
 }
 
 const show = (roomName) => {
-  roomVisible.value = data.rooms.find((room) => room.name === roomName)
+  roomVisible.value = rooms.find((room) => room.name === roomName)
   highlightedItem.value = roomVisible.value.id
   search.value = ""
 }
 const searchRooms = () => {
   const lastSearchedRooms = searchedRooms
-  searchedRooms = data.rooms.filter((room) => {
+  searchedRooms = rooms.filter((room) => {
     if (search.value.length > 1) {
       return (
         room.name.toLowerCase().includes(search.value.toLowerCase()) ||
-        room.description.toLowerCase().includes(search.value.toLowerCase())
+        room.description?.toLowerCase().includes(search.value.toLowerCase())
       )
     } else {
       return room.name.toLowerCase().includes(search.value.toLowerCase())
@@ -211,7 +242,9 @@ const searchRooms = () => {
     highlightedIndex.value = 0
   }
   if (searchedRooms.length && search.value) {
-    highlightedItem.value = searchedRooms[highlightedIndex.value].id
+    highlightedItem.value =
+      searchedRooms[highlightedIndex.value].roomId ||
+      searchedRooms[highlightedIndex.value].id
   } else if (!searchedRooms.length) {
     highlightedItem.value = -1
   }
@@ -232,14 +265,16 @@ const moveHighlight = (step) => {
       searchedRooms.length
   }
   if (searchedRooms.length) {
-    highlightedItem.value = searchedRooms[highlightedIndex.value].id
+    highlightedItem.value =
+      searchedRooms[highlightedIndex.value].roomId ||
+      searchedRooms[highlightedIndex.value].id
   } else {
     highlightedItem.value = -1
   }
   nextTick(() => {
-    const highlightedElement = document.getElementById("highlighted")
+    const highlightedElement = document.getElementsByClassName("highlighted")
     if (highlightedElement) {
-      highlightedElement.scrollIntoView({
+      highlightedElement[0].scrollIntoView({
         behavior: "smooth",
         block: "nearest",
         inline: "nearest"
@@ -303,6 +338,16 @@ if (route.query.id) {
 }
 document.addEventListener("keydown", escPressed)
 
+onMounted(() => {
+  nextTick(() => {
+    for (const block in data.blocks) {
+      blockHeights.value.push(
+        document.getElementById("block-" + block)?.clientHeight + 4
+      )
+      console.log(blockHeights.value)
+    }
+  })
+})
 onUnmounted(() => {
   document.removeEventListener("keydown", escPressed)
 })

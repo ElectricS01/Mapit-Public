@@ -27,15 +27,6 @@
   ],
   "rooms": [
     {
-      "id": 0,
-      "name": "Room 1",
-      "description": "This is the first room",
-      "x": 20,
-      "y": 20,
-      "width": 110,
-      "height": 130
-    },
-    {
       "id": 1,
       "name": "Room 2",
       "description": "This is the second room",
@@ -53,7 +44,7 @@
     },
     {
       "id": 3,
-      "class": "store",
+      "type": "store",
       "name": "Room 4",
       "description": "This is the forth room",
       "m": [4, 0, 0, 54],
@@ -62,7 +53,7 @@
     },
     {
       "id": 4,
-      "class": "store",
+      "type": "store",
       "name": "Room 5",
       "description": "This is the fifth room",
       "m": [4, 0, 0, 54],
@@ -79,5 +70,15 @@
       "rooms": [[1, 2], [3], [4]]
     }
   ],
-  "standard": [0]
+  "standard": [
+    {
+      "id": 0,
+      "name": "Room 1",
+      "description": "This is the first room",
+      "x": 20,
+      "y": 20,
+      "width": 110,
+      "height": 130
+    }
+  ]
 }
