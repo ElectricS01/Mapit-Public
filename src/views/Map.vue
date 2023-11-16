@@ -344,7 +344,6 @@ onMounted(() => {
       blockHeights.value.push(
         document.getElementById("block-" + block)?.clientHeight + 4
       )
-      console.log(blockHeights.value)
     }
   })
 })

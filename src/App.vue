@@ -1,7 +1,13 @@
 <template>
   <header :class="isDarkMode === 'true' ? 'dark-mode' : 'light-mode'">
     <div class="navbar" id="mobile-navbar">
-      <router-link to="/" @click="responsiveNavbar()">Home</router-link>
+      <router-link
+        to="/"
+        :class="{ active: active('/') }"
+        @click="responsiveNavbar()"
+      >
+        Home
+      </router-link>
       <router-link
         to="/map"
         :class="{ active: active('/map') }"
@@ -59,7 +65,7 @@ if (localStorage.getItem("isDarkMode") !== "true") {
 }
 
 const active = (routePattern) => {
-  return route.path.startsWith(routePattern)
+  return route.path === routePattern
 }
 const responsiveNavbar = () => {
   const responsiveNavbar = document.getElementById("mobile-navbar")

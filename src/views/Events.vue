@@ -17,9 +17,12 @@
             v-for="room in event.roomIDs"
             :key="room"
             class="button"
-            :to="'map?id=' + data.rooms[room].id"
+            :to="
+              'map?id=' +
+              rooms.find((e) => e.id === room || e.roomId === room)?.name
+            "
           >
-            {{ data.rooms[room].name }}
+            {{ rooms.find((e) => e.id === room || e.roomId === room)?.name }}
           </router-link>
         </div>
         <div class="event">
@@ -37,6 +40,11 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 
 dayjs.extend(relativeTime)
+
+const rooms = data.standard
+  .concat(data.rooms)
+  .concat(data.blocks)
+  .filter((value) => Object.keys(value).length !== 0 && value.name)
 
 const displayTime = (date, end) => {
   const hoursDifference = dayjs(date).diff(dayjs(), "hour")
