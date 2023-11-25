@@ -39,7 +39,13 @@
   </header>
   <main :class="isDarkMode === 'true' ? 'dark-mode' : 'light-mode'">
     <div class="background-container">
-      <div class="background"></div>
+      <img
+        class="background"
+        @load="loaded = true"
+        :style="{ opacity: loaded ? 1 : 0 }"
+        alt="background"
+        src="/background.webp"
+      />
       <router-view />
     </div>
   </main>
@@ -53,6 +59,7 @@ import { ref } from "vue"
 const route = useRoute()
 
 const isDarkMode = ref("true")
+const loaded = ref(false)
 
 if (localStorage.getItem("isDarkMode")) {
   isDarkMode.value = localStorage.getItem("isDarkMode")
@@ -79,11 +86,11 @@ let toggleMode = () => {
   if (localStorage.getItem("isDarkMode") !== "true") {
     localStorage.setItem("isDarkMode", "true")
     document.body.style.backgroundColor = "#181a1b"
-    console.log(isDarkMode === "true" ? "sun" : "moon")
+    console.log(isDarkMode.value === "true" ? "sun" : "moon")
   } else {
     localStorage.setItem("isDarkMode", "false")
     document.body.style.backgroundColor = "white"
-    console.log(isDarkMode === "true" ? "sun" : "moon")
+    console.log(isDarkMode.value === "true" ? "sun" : "moon")
   }
   isDarkMode.value = localStorage.getItem("isDarkMode")
 }

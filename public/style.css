@@ -8,12 +8,14 @@ body {
   transition: background-color 1s ease, color 1s ease;
 }
 
+.edit-panel::-webkit-scrollbar,
 .event-box::-webkit-scrollbar,
 .search-box::-webkit-scrollbar,
 .container-flex::-webkit-scrollbar {
   width: 6px;
 }
 
+.edit-panel::-webkit-scrollbar-thumb,
 .event-box::-webkit-scrollbar-thumb,
 .search-box::-webkit-scrollbar-thumb,
 .container-flex::-webkit-scrollbar-thumb {
@@ -65,11 +67,11 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background-image: url('background.webp');
   background-size: cover;
   filter: brightness(1) blur(10px) saturate(1);
   animation: moveImage 100s infinite alternate;
-  transition: filter 0.3s ease;
+  transition: filter 0.3s ease, opacity 0.5s ease;
+  opacity: 0;
 }
 
 .light-mode .background {
@@ -138,6 +140,8 @@ body {
 
 .edit-panel {
   text-align: left;
+  height: calc(100% - 42px);
+  overflow-y: auto;
 }
 
 .edit-panel-sub {
@@ -159,6 +163,7 @@ body {
   transition: background-color 1s ease;
 }
 
+.edit-panel::-webkit-scrollbar-thumb:hover,
 .event-box::-webkit-scrollbar-thumb:hover,
 .search-box::-webkit-scrollbar-thumb:hover,
 .highlighted,
@@ -175,6 +180,7 @@ body {
 
 .light-mode .sub-map-item:hover,
 .light-mode .map-item:hover,
+.light-mode .edit-panel::-webkit-scrollbar-thumb:hover,
 .light-mode .event-box::-webkit-scrollbar-thumb:hover,
 .light-mode .search-box::-webkit-scrollbar-thumb:hover,
 .light-mode .highlighted,
@@ -306,10 +312,17 @@ body {
   background-color: rgba(20, 20, 20, 0.9);
 }
 
+.sub-map-background {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 1s ease;
+}
+
 .map-background {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.5);
   transition: background-color 1s ease;
+  position: absolute;
 }
 
 .light-mode .map-background {

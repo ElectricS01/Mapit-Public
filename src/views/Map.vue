@@ -6,31 +6,40 @@
           <div
             v-for="room in standardRooms"
             @click="show(room.name)"
-            class="map-item"
-            :class="{ selected: isHighlighted === room.id }"
+            :class="[
+              { selected: isHighlighted === room.id },
+              room.type === 'background' ? 'map-background' : 'map-item'
+            ]"
             :style="{
               width: room.width + 'px',
               height: room.height + 'px',
               left: room.x + 'px',
-              top: room.y + 'px'
+              top: room.y + 'px',
+              transform: 'rotate(' + room.r + 'deg)'
             }"
           >
-            {{ room.name }}
+            {{ room.type === "background" ? "" : room.name }}
           </div>
           <div
             v-for="block in data.blocks"
             class="block"
             :id="'block-' + block.id"
+            :class="{ selected: isHighlighted === block.roomId && !block.type }"
             :style="{
               left: block.x + 'px',
               top: block.y + 'px',
-              transform: 'rotate(' + block.r + 'deg)'
+              transform: 'rotate(' + block.r + 'deg)',
+              border: '1px solid #' + block.c
             }"
           >
             <div
               class="block-title"
               :style="{
-                bottom: blockHeights[block.id] + 'px'
+                bottom: block.tWidth
+                  ? blockHeights[block.id] / 2 + 'px'
+                  : blockHeights[block.id] + 'px',
+                width: block.tWidth + 'px',
+                right: block.tWidth ? 0 : ''
               }"
               @click="show(block.name)"
             >
@@ -42,7 +51,9 @@
                 @click="show(room.name)"
                 :class="[
                   { selected: isHighlighted === room.id },
-                  room.type === 'store' ? 'map-background' : 'sub-map-item'
+                  room.type === 'background' || room.type === 'hidden'
+                    ? 'sub-map-background'
+                    : 'sub-map-item'
                 ]"
                 :style="{
                   width: room.width + 'px',
@@ -58,7 +69,11 @@
                     'px'
                 }"
               >
-                {{ room.type === "store" ? "" : room.name }}
+                {{
+                  room.type === "background" || room.type === "hidden"
+                    ? ""
+                    : room.name
+                }}
               </div>
             </div>
           </div>
@@ -75,11 +90,7 @@
             @keydown.up.prevent="moveHighlight(-1)"
             @keydown.enter="activateItem"
           />
-          <icons
-            icon="settings"
-            class="edit"
-            @click="showEdit = !showEdit"
-          ></icons>
+          <icons icon="settings" class="edit" @click="showEdit = !showEdit" />
         </div>
         <div v-if="search" class="search-box" ref="searchBox">
           <div
@@ -100,7 +111,7 @@
               icon="close"
               class="close"
               @click=";(highlightedItem = -1), (roomVisible = {})"
-            ></icons>
+            />
           </div>
           <p class="title-menu">{{ roomVisible.name }}</p>
           <p>{{ roomVisible.description }}</p>
@@ -215,13 +226,15 @@ const show = (roomName) => {
 const searchRooms = () => {
   const lastSearchedRooms = searchedRooms
   searchedRooms = rooms.filter((room) => {
-    if (search.value.length > 1) {
-      return (
-        room.name.toLowerCase().includes(search.value.toLowerCase()) ||
-        room.description?.toLowerCase().includes(search.value.toLowerCase())
-      )
-    } else {
-      return room.name.toLowerCase().includes(search.value.toLowerCase())
+    if (room.type !== "hidden") {
+      if (search.value.length > 1) {
+        return (
+          room.name.toLowerCase().includes(search.value.toLowerCase()) ||
+          room.description?.toLowerCase().includes(search.value.toLowerCase())
+        )
+      } else {
+        return room.name.toLowerCase().includes(search.value.toLowerCase())
+      }
     }
   })
   searchedRooms.sort((a, b) => {
@@ -326,9 +339,8 @@ const isRoomVisible = computed(() => {
 const isHighlighted = computed(() => {
   if (search.value || isRoomVisible.value) {
     return highlightedItem.value
-  }
+  } else return -1
 })
-
 watch(search, () => {
   searchRooms()
 })

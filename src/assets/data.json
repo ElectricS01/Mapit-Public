@@ -44,7 +44,7 @@
     },
     {
       "id": 3,
-      "type": "store",
+      "type": "background",
       "name": "Room 4",
       "description": "This is the forth room",
       "m": [4, 0, 0, 54],
@@ -53,7 +53,7 @@
     },
     {
       "id": 4,
-      "type": "store",
+      "type": "background",
       "name": "Room 5",
       "description": "This is the fifth room",
       "m": [4, 0, 0, 54],
