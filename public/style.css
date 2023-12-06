@@ -3,7 +3,7 @@ body {
   margin: 48px 0 0;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
-  /*background-image: linear-gradient(rgb(255, 204, 0),rgb(255, 102, 0));*//*debug*/
+  /*background-image: linear-gradient(rgb(255, 204, 0),rgb(255, 102, 0));*/ /*debug*/
   background-color: #181a1b;
   transition: background-color 1s ease, color 1s ease;
 }
@@ -79,7 +79,8 @@ body {
 }
 
 @keyframes moveImage {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1.4) translate(5%, 5%);
   }
   25% {
@@ -141,7 +142,14 @@ body {
 .edit-panel {
   text-align: left;
   height: calc(100% - 42px);
+}
+
+.edit-panel-list {
   overflow-y: auto;
+}
+
+.edit-panel-edit {
+  height: calc(50% - 10px);
 }
 
 .edit-panel-sub {
@@ -206,7 +214,6 @@ body {
 }
 
 @media screen and (max-width: 360px) {
-
   .navbar a:not(:first-child) {
     display: none;
     margin: 4px;
@@ -248,7 +255,7 @@ body {
   border-radius: 8px;
   opacity: 0;
   animation: slideIn-menu 1s forwards, fadeIn 1s forwards;
-  align-content:center ;
+  align-content: center;
 }
 
 .side-bar {
@@ -270,7 +277,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.075);
   margin: 8px auto auto auto;
   height: 734px;
-  width: 528px;
+  width: 678px;
   transition: border 1s ease;
 }
 
@@ -290,6 +297,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
 }
 
 .sub-map-item {
@@ -352,15 +360,7 @@ body {
   cursor: pointer;
   width: 100%;
   position: absolute;
-  bottom: 76px;
-  line-height: 12px
-}
-
-.block-title-other {
-  cursor: pointer;
-  width: 100%;
-  position: absolute;
-  line-height: 12px
+  line-height: 12px;
 }
 
 .block-row {
@@ -422,7 +422,7 @@ input {
 }
 
 .light-mode input {
-  background-color: #5B5B5B40;
+  background-color: #5b5b5b40;
 }
 
 input:focus {
@@ -437,7 +437,7 @@ input:focus {
 
 a {
   text-decoration: none;
-  color: #00A8FC;
+  color: #00a8fc;
 }
 
 .medium {
@@ -495,7 +495,7 @@ a {
 }
 
 .school-events {
-text-decoration: mediumorchid;
+  text-decoration: mediumorchid;
 }
 
 .events {

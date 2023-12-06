@@ -1,7 +1,7 @@
 {
   "name": "mapit",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,15 +10,16 @@
     "lint": "eslint --ext .js,.vue --fix src"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^4.5.0",
+    "@vitejs/plugin-vue": "^4.5.1",
     "dayjs": "^1.11.10",
-    "vite": "^5.0.2",
-    "vite-plugin-pwa": "^0.17.0",
-    "vue": "^3.3.8",
+    "vite": "^5.0.5",
+    "vite-plugin-pwa": "^0.17.3",
+    "vue": "^3.3.10",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "eslint": "^8.54.0",
-    "eslint-plugin-vue": "^9.18.1"
+    "eslint": "^8.55.0",
+    "eslint-plugin-vue": "^9.19.2",
+    "eslint-config-prettier": "^9.0.0"
   }
 }

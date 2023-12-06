@@ -6,11 +6,13 @@
 
       <div
         v-for="(event, index) in data.events"
-        :key="event"
         :id="'event-' + index"
+        :key="event"
       >
-        <div class="spacer"></div>
-        <p class="medium">{{ event.title }}</p>
+        <div class="spacer" />
+        <p class="medium">
+          {{ event.title }}
+        </p>
         <p>{{ event.description }}</p>
         <div class="rooms">
           <router-link

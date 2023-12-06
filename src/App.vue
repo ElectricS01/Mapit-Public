@@ -1,6 +1,6 @@
 <template>
   <header :class="isDarkMode === 'true' ? 'dark-mode' : 'light-mode'">
-    <div class="navbar" id="mobile-navbar">
+    <div id="mobile-navbar" class="navbar">
       <router-link
         to="/"
         :class="{ active: active('/') }"
@@ -33,7 +33,7 @@
         :icon="isDarkMode === 'true' ? 'sun' : 'moon'"
         class="mode-switch"
         @click="toggleMode()"
-      ></icons>
+      />
       <div class="icon-mobile" @click="responsiveNavbar()">☰</div>
     </div>
   </header>
@@ -41,10 +41,10 @@
     <div class="background-container">
       <img
         class="background"
-        @load="loaded = true"
         :style="{ opacity: loaded ? 1 : 0 }"
         alt="background"
         src="/background.webp"
+        @load="loaded = true"
       />
       <router-view />
     </div>

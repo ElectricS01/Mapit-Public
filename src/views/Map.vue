@@ -5,7 +5,7 @@
         <div class="map">
           <div
             v-for="room in standardRooms"
-            @click="show(room.name)"
+            :key="room.id"
             :class="[
               { selected: isHighlighted === room.id },
               room.type === 'background' ? 'map-background' : 'map-item'
@@ -17,13 +17,15 @@
               top: room.y + 'px',
               transform: 'rotate(' + room.r + 'deg)'
             }"
+            @click="show(room.name)"
           >
             {{ room.type === "background" ? "" : room.name }}
           </div>
           <div
             v-for="block in data.blocks"
-            class="block"
             :id="'block-' + block.id"
+            :key="block.id"
+            class="block"
             :class="{ selected: isHighlighted === block.roomId && !block.type }"
             :style="{
               left: block.x + 'px',
@@ -45,10 +47,15 @@
             >
               {{ block.name }}
             </div>
-            <div v-for="(row, index) in block.rooms" class="block-row">
+            <div
+              v-for="(row, index) in block.rooms"
+              :key="row"
+              class="block-row"
+              :style="{ height: block?.o && index === 0 ? block.o + 'px' : '' }"
+            >
               <div
                 v-for="room in wingRooms[block.id][index]"
-                @click="show(room.name)"
+                :key="room"
                 :class="[
                   { selected: isHighlighted === room.id },
                   room.type === 'background' || room.type === 'hidden'
@@ -68,6 +75,7 @@
                     room.m[3] +
                     'px'
                 }"
+                @click="show(room.name)"
               >
                 {{
                   room.type === "background" || room.type === "hidden"
@@ -82,8 +90,8 @@
       <div class="side-bar">
         <div class="class-details">
           <input
-            style="width: calc(100% - 40px)"
             v-model="search"
+            style="width: calc(100% - 40px)"
             autocomplete="off"
             placeholder="Search for a room"
             @keydown.down.prevent="moveHighlight(1)"
@@ -92,14 +100,14 @@
           />
           <icons icon="settings" class="edit" @click="showEdit = !showEdit" />
         </div>
-        <div v-if="search" class="search-box" ref="searchBox">
+        <div v-if="search" ref="searchBox" class="search-box">
           <div
             v-for="(room, index) in searchedRooms"
-            :key="room.name"
             :id="'room-' + index"
-            @click="show(room.name), (search = '')"
+            :key="room.name"
             :class="{ highlighted: index === highlightedIndex }"
             class="search-item"
+            @click="show(room.name), (search = '')"
           >
             {{ room.name }}
           </div>
@@ -113,37 +121,92 @@
               @click=";(highlightedItem = -1), (roomVisible = {})"
             />
           </div>
-          <p class="title-menu">{{ roomVisible.name }}</p>
+          <p class="title-menu">
+            {{ roomVisible.name }}
+          </p>
           <p>{{ roomVisible.description }}</p>
         </div>
         <div v-else-if="showEdit" class="edit-panel">
-          <div v-for="room in standardRooms">{{ room.name }}</div>
-          <div v-for="block in data.blocks">
-            {{ block.name || "Unnamed Block" }}
-            <div v-for="(row, index) in block.rooms" class="edit-panel-sub">
-              Row {{ index }}
+          <div
+            class="edit-panel-list"
+            :style="{ height: highlightedEdit === -1 ? '100%' : '50%' }"
+          >
+            <div
+              v-for="room in standardRooms"
+              :key="room.id"
+              :class="{ highlighted: room.id === highlightedEdit }"
+              class="search-item edit-panel-sub"
+              @click="editRoom(room.id)"
+            >
+              {{ room.name }}
+            </div>
+            <div v-for="block in data.blocks" :key="block.id">
               <div
-                v-for="room in wingRooms[block.id][index]"
+                :class="{ highlighted: block.roomId === highlightedEdit }"
+                class="search-item"
+                @click="editRoom(block.roomId)"
+              >
+                {{ block.name || "Unnamed Block" }}
+              </div>
+              <div
+                v-for="(row, index) in block.rooms"
+                :key="row"
                 class="edit-panel-sub"
               >
-                {{ room.name }}
+                <div
+                  :class="{ highlighted: block.roomId === highlightedEdit }"
+                  class="search-item"
+                  @click="editRoom(block.roomId)"
+                >
+                  Row {{ index }}
+                </div>
+                <div
+                  v-for="room in wingRooms[block.id][index]"
+                  :key="room.id"
+                  :class="{ highlighted: room.id === highlightedEdit }"
+                  class="search-item edit-panel-sub"
+                  @click="editRoom(room.id)"
+                >
+                  {{ room.name }}
+                </div>
               </div>
             </div>
+          </div>
+          <div v-if="highlightedEdit !== -1" class="edit-panel-edit">
+            <div class="spacer" />
+            <p class="title-menu" style="margin: 0">
+              {{
+                rooms.find(
+                  (e) =>
+                    e.id === highlightedEdit || e.roomId === highlightedEdit
+                )?.name
+              }}
+            </p>
+            <p>
+              {{
+                rooms.find(
+                  (e) =>
+                    e.id === highlightedEdit || e.roomId === highlightedEdit
+                )?.description
+              }}
+            </p>
           </div>
         </div>
         <div v-else style="height: calc(100% - 80px)">
           <p class="title-menu">Interactive Map</p>
           <div v-if="data.events.length" style="height: calc(100% - 76px)">
-            <div class="spacer"></div>
+            <div class="spacer" />
             <p class="title-sub">Upcoming events</p>
             <div class="event-box">
               <div
                 v-for="(event, index) in data.events"
-                :key="event"
                 :id="'event-' + index"
+                :key="event"
               >
-                <div class="spacer"></div>
-                <p class="medium">{{ event.title }}</p>
+                <div class="spacer" />
+                <p class="medium">
+                  {{ event.title }}
+                </p>
                 <p>{{ event.description }}</p>
                 <div class="rooms">
                   <div
@@ -187,6 +250,7 @@ const showEdit = ref(false)
 const search = ref("")
 const highlightedIndex = ref(0)
 const highlightedItem = ref(-1)
+const highlightedEdit = ref(-1)
 let searchedRooms = {}
 const blockHeights = ref([])
 
@@ -220,8 +284,11 @@ for (let i = 0; i < data.blocks.length; i++) {
 
 const show = (roomName) => {
   roomVisible.value = rooms.find((room) => room.name === roomName)
-  highlightedItem.value = roomVisible.value.id
+  highlightedItem.value = roomVisible.value.roomId || roomVisible.value.id
   search.value = ""
+}
+const editRoom = (roomId) => {
+  highlightedEdit.value = roomId
 }
 const searchRooms = () => {
   const lastSearchedRooms = searchedRooms
