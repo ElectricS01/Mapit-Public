@@ -235,7 +235,7 @@
 </template>
 
 <script setup>
-import Icons from "@/components/Icons.vue"
+import Icons from "../components/Icons.vue"
 import data from "../assets/data.json"
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue"
 import dayjs from "dayjs"

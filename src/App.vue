@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import Icons from "@/components/Icons.vue"
+import Icons from "./components/Icons.vue"
 import { useRoute } from "vue-router"
 import { ref } from "vue"
 
