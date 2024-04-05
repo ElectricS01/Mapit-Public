@@ -43,7 +43,7 @@
         class="background"
         :style="{ opacity: loaded ? 1 : 0 }"
         alt="background"
-        src="/background.webp"
+        src="/src/assets/background.webp"
         @load="loaded = true"
       />
       <router-view />

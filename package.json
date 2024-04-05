@@ -1,7 +1,7 @@
 {
   "name": "mapit",
   "private": true,
-  "version": "0.7.2",
+  "version": "0.8.0",
   "type": "module",
   "scripts": {
     "dev": "bunx --bun vite",
@@ -12,7 +12,7 @@
     "@vitejs/plugin-vue": "^5.0.2",
     "dayjs": "^1.11.10",
     "vite": "^5.0.10",
-    "vite-plugin-pwa": "^0.17.4",
+    "vite-plugin-pwa": "^0.19.7",
     "vue": "^3.4.3",
     "vue-router": "^4.2.5"
   },
