@@ -213,7 +213,7 @@
                     v-for="room in event.roomIDs"
                     :key="room"
                     class="button"
-                    @click="show(data.rooms[room].name)"
+                    @click="showById(room)"
                   >
                     {{
                       rooms.find((e) => e.id === room || e.roomId === room)
@@ -282,6 +282,9 @@ for (let i = 0; i < data.blocks.length; i++) {
   })
 }
 
+const showById = (id) => {
+  show(rooms.find((e) => e.id === id || e.roomId === id)?.name)
+}
 const show = (roomName) => {
   roomVisible.value = rooms.find((room) => room.name === roomName)
   highlightedItem.value = roomVisible.value.roomId || roomVisible.value.id
@@ -413,7 +416,7 @@ watch(search, () => {
 })
 
 if (route.query.id) {
-  show(data.rooms[route.query.id].name)
+  show(route.query.id)
 }
 document.addEventListener("keydown", escPressed)
 
