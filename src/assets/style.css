@@ -5,12 +5,15 @@ body {
   color: white;
   /*background-image: linear-gradient(rgb(255, 204, 0),rgb(255, 102, 0));*/ /*debug*/
   background-color: #181a1b;
-  transition: background-color 1s ease, color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
 }
 
 .edit-panel::-webkit-scrollbar,
 .event-box::-webkit-scrollbar,
 .search-box::-webkit-scrollbar,
+.container::-webkit-scrollbar,
 .container-flex::-webkit-scrollbar {
   width: 6px;
 }
@@ -18,12 +21,16 @@ body {
 .edit-panel::-webkit-scrollbar-thumb,
 .event-box::-webkit-scrollbar-thumb,
 .search-box::-webkit-scrollbar-thumb,
+.container::-webkit-scrollbar-thumb,
 .container-flex::-webkit-scrollbar-thumb {
   background-color: rgba(40, 42, 43, 0.75);
   border-radius: 3px;
-  transition: background-color 1s ease, fill 1s ease;
+  transition:
+    background-color 1s ease,
+    fill 1s ease;
 }
 
+.container::-webkit-scrollbar-thumb:hover,
 .container-flex::-webkit-scrollbar-thumb:hover {
   background-color: rgba(49, 52, 53, 0.75);
 }
@@ -47,6 +54,7 @@ body {
   height: calc(100% - 48px);
   overflow-y: auto;
   text-align: center;
+  scrollbar-gutter: stable;
 }
 
 .map-container {
@@ -70,7 +78,9 @@ body {
   background-size: cover;
   filter: brightness(1) blur(10px) saturate(1);
   animation: moveImage 100s infinite alternate;
-  transition: filter 0.3s ease, opacity 0.5s ease;
+  transition:
+    filter 0.3s ease,
+    opacity 0.5s ease;
   opacity: 0;
 }
 
@@ -113,7 +123,9 @@ body {
   border-radius: 4px;
   margin: 4px;
   font-size: 17px;
-  transition: background-color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
 }
 
 .menu-button.active,
@@ -129,14 +141,19 @@ body {
 .close {
   position: absolute;
   right: 8px;
-  transition: background-color 1s ease, fill 1s ease;
+  transition:
+    background-color 1s ease,
+    fill 1s ease;
 }
 
 .edit {
   position: absolute;
   right: 8px;
   top: 18px;
-  transition: background-color 1s ease, fill 1s ease;
+  border-radius: 4px;
+  transition:
+    background-color 1s ease,
+    fill 1s ease;
 }
 
 .edit-panel {
@@ -164,7 +181,9 @@ body {
   position: absolute;
   right: 0;
   top: 0;
-  transition: background-color 1s ease, fill 1s ease;
+  transition:
+    background-color 1s ease,
+    fill 1s ease;
 }
 
 .search-item {
@@ -183,7 +202,9 @@ body {
 .menu-button:hover,
 .icon-mobile:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  transition: background-color 0.25s ease, fill 1s ease;
+  transition:
+    background-color 0.25s ease,
+    fill 0.25s ease;
 }
 
 .light-mode .sub-map-item:hover,
@@ -201,7 +222,9 @@ body {
 .light-mode .navbar a:hover,
 .light-mode .icon-mobile:hover {
   background-color: rgba(0, 0, 0, 0.1);
-  transition: background-color 0.25s ease, fill 1s ease;
+  transition:
+    background-color 0.25s ease,
+    fill 0.25s ease;
 }
 
 .navbar a:not(:first-child) {
@@ -210,7 +233,9 @@ body {
 
 .icon-mobile {
   display: none;
-  transition: background-color 1s ease, color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
 }
 
 @media screen and (max-width: 360px) {
@@ -254,7 +279,9 @@ body {
   padding: 16px;
   border-radius: 8px;
   opacity: 0;
-  animation: slideIn-menu 1s forwards, fadeIn 1s forwards;
+  animation:
+    slideIn-menu 1s forwards,
+    fadeIn 1s forwards;
   align-content: center;
 }
 
@@ -264,6 +291,7 @@ body {
   height: calc(100% - 16px);
   background-color: rgba(40, 42, 43, 0.75);
   animation: fadeIn 1s forwards;
+  transition: background-color 1s ease;
 }
 
 .map-page {
@@ -291,7 +319,9 @@ body {
   user-select: none;
   border: 1px solid rgba(255, 255, 255, 0.5);
   background-color: rgba(0, 0, 0, 0.6);
-  transition: background-color 1s ease, color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
   cursor: pointer;
   position: absolute;
   display: flex;
@@ -307,7 +337,9 @@ body {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.5);
   background-color: rgba(0, 0, 0, 0.6);
-  transition: background-color 1s ease, color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
   cursor: pointer;
   font-size: 12px;
   display: flex;
@@ -389,7 +421,9 @@ body {
   background-color: rgba(40, 42, 43, 0.75);
   padding: 8px;
   border-radius: 4px;
-  transition: background-color 1s ease, color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
 }
 
 .menu-button {
@@ -399,7 +433,9 @@ body {
   padding: 8px;
   border-radius: 4px;
   animation: fadeIn 1s forwards;
-  transition: background-color 1s ease, color 1s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease;
 }
 
 .button:hover {
@@ -453,7 +489,9 @@ a {
 .title {
   font-size: 36px;
   margin-top: 12px;
-  animation: slideIn 1s forwards, fadeIn 1s forwards;
+  animation:
+    slideIn 1s forwards,
+    fadeIn 1s forwards;
 }
 
 .title-small {
@@ -518,13 +556,14 @@ a {
   display: flex;
 }
 
-.search-item,
 p,
-a,
 input,
 .menu,
 .navbar {
-  transition: background-color 1s ease, color 1s ease, filter 0.3s ease;
+  transition:
+    background-color 1s ease,
+    color 1s ease,
+    filter 0.3s ease;
 }
 
 .light-mode .close,
@@ -541,13 +580,13 @@ input,
 .light-mode .icon-mobile,
 .light-mode .menu-button,
 .light-mode p,
-.light-mode a {
+.light-mode .navbar a {
   color: black;
-  transition: background-color 1s ease, color 1s ease;
 }
 
 .light-mode .event-box::-webkit-scrollbar-thumb,
 .light-mode .search-box::-webkit-scrollbar-thumb,
+.light-mode .container::-webkit-scrollbar-thumb,
 .light-mode .container-flex::-webkit-scrollbar-thumb,
 .light-mode .side-bar,
 .light-mode .map-item,
@@ -558,7 +597,6 @@ input,
 .light-mode .menu-button,
 .light-mode .navbar {
   background-color: rgba(255, 255, 255, 0.6);
-  transition: background-color 1s ease, color 1s ease;
 }
 
 .light-mode .button:hover {
