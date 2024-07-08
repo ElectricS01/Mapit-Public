@@ -4,27 +4,27 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: () => import("../views/Home.vue")
+    component: () => import("./views/Home.vue")
   },
   {
     path: "/map",
     name: "map",
-    component: () => import("../views/Map.vue")
+    component: () => import("./views/Map.vue")
   },
   {
     path: "/events",
     name: "events",
-    component: () => import("../views/Events.vue")
+    component: () => import("./views/Events.vue")
   },
   {
     path: "/about",
     name: "about",
-    component: () => import("../views/About.vue")
+    component: () => import("./views/About.vue")
   },
   {
     path: "/:pathMatch(.*)*",
     name: "404",
-    component: () => import("../views/404.vue")
+    component: () => import("./views/404.vue")
   }
 ]
 
