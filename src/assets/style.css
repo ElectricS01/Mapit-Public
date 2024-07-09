@@ -76,6 +76,7 @@ body {
   width: 200%;
   height: 200%;
   background-size: cover;
+  user-select: none;
   filter: brightness(1) blur(10px) saturate(1);
   animation: moveImage 100s infinite alternate;
   transition:
@@ -141,6 +142,7 @@ body {
 .close {
   position: absolute;
   right: 8px;
+  border-radius: 4px;
   transition:
     background-color 1s ease,
     fill 1s ease;
@@ -188,6 +190,14 @@ body {
 
 .search-item {
   transition: background-color 1s ease;
+}
+
+.navbar a.active {
+  background-color: #ffffff13;
+}
+
+.light-mode .navbar a.active {
+  background-color: #00000013;
 }
 
 .edit-panel::-webkit-scrollbar-thumb:hover,
@@ -438,8 +448,19 @@ body {
     color 1s ease;
 }
 
+.menu-button:active {
+  background-color: #ffffff13;
+}
+
+.light-mode .menu-button:active {
+  background-color: #00000013;
+}
+
 .button:hover {
   background-color: rgba(52, 55, 56, 0.75);
+  transition:
+    background-color 0.25s ease,
+    fill 0.25s ease;
 }
 
 .button:active {
