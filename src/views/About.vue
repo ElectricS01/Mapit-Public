@@ -14,7 +14,7 @@
         and
         <a href="https://github.com/Thomas123414">Thomas123414</a>
       </p>
-      <p class="small">Version: 0.9.9</p>
+      <p class="small">Version: 0.9.10</p>
     </div>
   </div>
 </template>
